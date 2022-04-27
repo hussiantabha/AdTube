@@ -1,0 +1,57 @@
+.video-container {
+  width: 780px;
+  height: 400px;
+  border: 1px solid black;
+  display: flex;
+  flex-flow: column;
+  align-items: flex-start;
+  padding-left: 3rem;
+}
+.video-section-2 {
+  padding-top: 5rem;
+  column-gap: 2rem;
+  display: flex;
+}
+.video-container-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.video-icon {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+}
+.video-container-icons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.sidebar-video-card-container {
+  display: flex;
+  flex-direction: column;
+}
+.sidebar-video-card {
+  border: 1px solid black;
+  display: flex;
+  padding: 0.5rem;
+}
+.sidebar-video-img-container {
+  width: 200px;
+  height: 150px;
+}
+.sidebar-video-img {
+  width: 100%;
+}
+.sidebar-video-content-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  row-gap: 0.25rem;
+}
+/* @media only screen and(max-width: 768px) {
+  .video-container {
+    max-width: 780px;
+    height: 400px;
+  }
+} ; */
