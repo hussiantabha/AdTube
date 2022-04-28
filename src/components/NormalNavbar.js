@@ -1,11 +1,11 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
-const Navbar = () => {
+const NormalNavbar = () => {
   let location = useLocation();
   return (
     <>
-      <nav className="nav">
+      <nav className="nav-normal">
         <div className="nav-header">
           <Link to="/">
             <h1 className="nav-logo">AdTube</h1>
@@ -25,7 +25,7 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default NormalNavbar;
 {
   /* <div className="nav-fixed">
   <div className="nav-header">
