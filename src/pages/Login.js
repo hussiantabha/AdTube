@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { ToastContainer, toast } from "react-toastify";
@@ -6,9 +6,11 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import "../css/login.css";
 import NormalNavbar from "../components/NormalNavbar";
+import { VideoContext } from "../context/Data";
 
 const Login = () => {
   let location = useLocation();
+  const { setUserLoggedIn } = useContext(VideoContext);
   console.log(location);
   let navigate = useNavigate();
   const [loginInput, setLoginInput] = useState({ email: "", password: "" });

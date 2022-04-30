@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const ListingVideos = () => {
   const { videoState, dispatch } = useContext(VideoContext);
-  console.log(videoState);
+  // console.log(videoState);
   return (
     <main className="main">
       {videoState.data.map(

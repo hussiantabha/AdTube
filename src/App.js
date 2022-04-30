@@ -7,7 +7,6 @@ import { VideoContext } from "./context/Data";
 
 function App() {
   const { videoState, dispatch } = useContext(VideoContext);
-  console.log(videoState.data);
   return (
     <div className="App">
       <Navbar />
