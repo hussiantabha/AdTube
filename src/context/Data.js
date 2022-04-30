@@ -23,24 +23,18 @@ const VideoContextProvider = ({ children }) => {
   useEffect(async () => {
     const getData = await fetch("/api/videos");
     const convertedJSON = await getData.json();
-    // console.log(convertedJSON.videos);
     dispatch({ type: "videoData", payload: { value: convertedJSON.videos } });
   }, []);
   const [userLoggedIn, setUserLoggedIn] = useState(false);
-  useEffect(() => {
-    if (sessionStorage.getItem("token") === null) {
-      dispatch({ type: "userLoggedIn", payload: { value: false } });
-    } else if (sessionStorage.getItem("token") === "undefined") {
-      dispatch({ type: "userLoggedIn", payload: { value: false } });
-    } else {
-      dispatch({ type: "userLoggedIn", payload: { value: true } });
-    }
-  });
-
   // useEffect(() => {
-  //   let token = sessionStorage.getItem("token");
-  //   console.log("token", token);
-  // });
+  //   if (sessionStorage.getItem("token") === null) {
+  //     dispatch({ type: "userLoggedIn", payload: { value: false } });
+  //   } else if (sessionStorage.getItem("token") === "undefined") {
+  //     dispatch({ type: "userLoggedIn", payload: { value: false } });
+  //   } else {
+  //     dispatch({ type: "userLoggedIn", payload: { value: true } });
+  //   }
+  // }, [videoState]);
   return (
     <>
       <VideoContext.Provider

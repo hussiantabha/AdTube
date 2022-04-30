@@ -11,7 +11,6 @@ import { VideoContext } from "../context/Data";
 const Login = () => {
   let location = useLocation();
   const { setUserLoggedIn } = useContext(VideoContext);
-  console.log(location);
   let navigate = useNavigate();
   const [loginInput, setLoginInput] = useState({ email: "", password: "" });
   const loginFunc = async () => {
@@ -23,10 +22,8 @@ const Login = () => {
         },
         body: JSON.stringify(loginInput),
       });
-      console.log(postData);
       if (postData.status === 200) {
         const convertedJSON = await postData.json();
-        console.log(postData);
         sessionStorage.setItem("token", convertedJSON.encodedToken);
         setLoginInput({ email: "", password: "" });
         navigate(location.state.from.pathname || "/");
