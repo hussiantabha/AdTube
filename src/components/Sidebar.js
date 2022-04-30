@@ -18,11 +18,11 @@ const Sidebar = () => {
           <BiHistory className="sidebar-item-icon" />
           <span>History</span>
         </Link>
-        <Link to="/" className="sidebar-item">
+        <Link to="/watchlater" className="sidebar-item">
           <MdVideoLibrary className="sidebar-item-icon" />
           <span>Watch Later</span>
         </Link>
-        <Link to="/" className="sidebar-item">
+        <Link to="/playlist" className="sidebar-item">
           <MdPlaylistPlay className="sidebar-item-icon" />
           <span>Playlist</span>
         </Link>

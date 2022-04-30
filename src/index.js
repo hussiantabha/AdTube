@@ -7,6 +7,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MockAPI from "./components/Mockman";
 import { VideoContextProvider } from "./context/Data";
 import DisplayVideo from "./pages/DisplayVideo";
+import SignUp from "./pages/Signup";
+import Login from "./pages/Login";
+import Playlist from "./pages/Playlist";
+import WatchLater from "./pages/WatchLater";
 
 // Call make Server
 makeServer();
@@ -18,6 +22,10 @@ ReactDOM.render(
         <Route path="/" element={<App />} />
         <Route path="/video/:videoId" element={<DisplayVideo />} />
         <Route path="/mockman" element={<MockAPI />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/playlist" element={<Playlist />} />
+        <Route path="/watchlater" element={<WatchLater />} />
       </Routes>
     </VideoContextProvider>
   </BrowserRouter>,

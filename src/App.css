@@ -1,5 +1,6 @@
 @import "./css/nav.css";
 @import "./css/displayvideo.css";
+@import "./css/login.css";
 :root {
   --light-purple: #f3e8ff;
 }
