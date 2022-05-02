@@ -1,0 +1,22 @@
+.playlist-container {
+  display: flex;
+  flex-flow: column wrap;
+  row-gap: 1rem;
+  margin: 1rem 3rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #9ca3af;
+}
+.playlist-video-card-container {
+  display: flex;
+  justify-content: flex-start;
+  column-gap: 3rem;
+}
+.playlist-top-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.center-align {
+  text-align: center;
+  margin: 1.5rem 0;
+}
