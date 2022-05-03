@@ -4,6 +4,8 @@
 @import "./css/playlist.css";
 :root {
   --light-purple: #f3e8ff;
+  --indigo: #e0e7ff;
+  --white: #fff;
 }
 body {
   margin: 0;

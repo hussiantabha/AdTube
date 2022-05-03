@@ -125,7 +125,6 @@ const DisplayVideo = () => {
   useEffect(() => {
     getVideo();
   }, [param.videoId]);
-  //console.log(videoState);
   return (
     <>
       <ToastContainer
@@ -141,19 +140,21 @@ const DisplayVideo = () => {
       />
       <NormalNavbar />
       <div className={playlistModal ? "playlist-modal" : "playlist-modal-hide"}>
+        <h3>Create Playlist</h3>
         <div className="playlist-modal-top-container">
           <input
             type="text"
             onChange={(e) => setPlaylist(e.target.value)}
             value={playlist}
+            className="playlist-input"
           />
-          <button className="btn btn-primary-outline" onClick={postPlaylist}>
+          <button className="btn-modal" onClick={postPlaylist}>
             Add
           </button>
         </div>
         {videoState.playlist.map((element) => {
           return (
-            <div className="individual-playlist">
+            <div className="individual-playlist" key={element.title}>
               <input
                 type="checkbox"
                 value={element.title}
@@ -172,7 +173,9 @@ const DisplayVideo = () => {
             </div>
           );
         })}
-        <button onClick={addVideoToPlaylist}>Add To Playlist</button>
+        <button className="btn-modal-fullWidth" onClick={addVideoToPlaylist}>
+          Add To Playlist
+        </button>
       </div>
       <section>
         <main>
@@ -182,7 +185,7 @@ const DisplayVideo = () => {
               height="100%"
               src={video.video_url}
               title="YouTube video player"
-              frameborder="0"
+              frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen="1"
               className="video-iframe"

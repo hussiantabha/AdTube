@@ -19,7 +19,7 @@ const ListingVideos = () => {
           duration,
         }) => {
           return (
-            <div className="video-card-container">
+            <div className="video-card-container" key={_id}>
               <Link to={`/video/${_id}`}>
                 <div className="video-img-container">
                   <img src={thumbnail} className="video-img" />
