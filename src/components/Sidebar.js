@@ -10,7 +10,7 @@ const Sidebar = () => {
           <BiHome className="sidebar-item-icon" />
           <span>Home</span>
         </Link>
-        <Link to="/" className="sidebar-item">
+        <Link to="/like" className="sidebar-item">
           <BiLike className="sidebar-item-icon" />
           <span>Liked</span>
         </Link>

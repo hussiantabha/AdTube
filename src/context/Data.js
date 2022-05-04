@@ -14,6 +14,12 @@ const VideoContextProvider = ({ children }) => {
       case "playlistData": {
         return { ...state, playlist: action.payload.value };
       }
+      case "likedVideos": {
+        return { ...state, likedVideos: action.payload.value };
+      }
+      case "watchLaterVideos": {
+        return { ...state, watchLater: action.payload.value };
+      }
       default: {
         return { ...state };
       }
@@ -23,6 +29,8 @@ const VideoContextProvider = ({ children }) => {
     data: [],
     login: false,
     playlist: [],
+    likedVideos: [],
+    watchLater: [],
   });
   useEffect(async () => {
     const getData = await fetch("/api/videos");
