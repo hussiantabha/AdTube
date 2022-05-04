@@ -11,6 +11,9 @@ const VideoContextProvider = ({ children }) => {
       case "userLoggedIn": {
         return { ...state, login: action.payload.value };
       }
+      case "playlistData": {
+        return { ...state, playlist: action.payload.value };
+      }
       default: {
         return { ...state };
       }
@@ -19,12 +22,14 @@ const VideoContextProvider = ({ children }) => {
   const [videoState, dispatch] = useReducer(reducerFunc, {
     data: [],
     login: false,
+    playlist: [],
   });
   useEffect(async () => {
     const getData = await fetch("/api/videos");
     const convertedJSON = await getData.json();
     dispatch({ type: "videoData", payload: { value: convertedJSON.videos } });
   }, []);
+
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   // useEffect(() => {
   //   if (sessionStorage.getItem("token") === null) {
