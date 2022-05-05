@@ -11,6 +11,7 @@ import SignUp from "./pages/Signup";
 import Login from "./pages/Login";
 import Playlist from "./pages/Playlist";
 import WatchLater from "./pages/WatchLater";
+import LikePage from "./pages/LikePage";
 
 // Call make Server
 makeServer();
@@ -24,6 +25,7 @@ ReactDOM.render(
         <Route path="/mockman" element={<MockAPI />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/like" element={<LikePage />} />
         <Route path="/playlist" element={<Playlist />} />
         <Route path="/watchlater" element={<WatchLater />} />
       </Routes>

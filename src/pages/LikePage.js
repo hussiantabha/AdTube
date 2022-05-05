@@ -1,39 +1,35 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import NormalNavbar from "../components/NormalNavbar";
 import { VideoContext } from "../context/Data";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-const WatchLater = () => {
+const LikePage = () => {
   const { videoState, dispatch } = useContext(VideoContext);
   const token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIxMjVkM2MzNy01MjcwLTQ5NjgtODQ0MC1iZTM3ZDFhNTE5OGUiLCJlbWFpbCI6ImFkYXJzaGJhbGlrYUBnbWFpbC5jb20ifQ.DPS9hLIaykSx9V9SwXsOhWgWQ7nk8MtTyumcWlbYamM";
-  const deleteWatchLaterVideo = async (id) => {
-    try {
-      const deleteData = await fetch(`/api/user/watchlater/${id}`, {
-        method: "DELETE",
-        headers: {
-          authorization: token,
-        },
+  const deleteLikeVideo = async (id) => {
+    const deleteData = await fetch(`/api/user/likes/${id}`, {
+      method: "DELETE",
+      headers: {
+        authorization: token,
+      },
+    });
+    if (deleteData.status === 200) {
+      const convertedJSON = await deleteData.json();
+      dispatch({
+        type: "likedVideos",
+        payload: { value: convertedJSON.likes },
       });
-      if (deleteData.status === 200) {
-        const convertedJSON = await deleteData.json();
-        dispatch({
-          type: "watchLaterVideos",
-          payload: { value: convertedJSON.watchlater },
-        });
-        toast.success("Deleted Successfully", {
-          position: "top-right",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-    } catch (error) {
-      console.log(error);
+      toast.success("Deleted Successfully", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
   return (
@@ -50,16 +46,17 @@ const WatchLater = () => {
         pauseOnHover={false}
       />
       <NormalNavbar />
+
       <main className="playlist-container">
         <div className="playlist-top-container">
-          {videoState.watchLater.length > 0 ? (
-            <h2>Watch Later Videos</h2>
+          {videoState.likedVideos.length > 0 ? (
+            <h2>Liked Videos</h2>
           ) : (
-            <h2>No Watch Later Videos</h2>
+            <h2>No Liked Videos</h2>
           )}
         </div>
         <section className="playlist-video-card-container">
-          {videoState.watchLater.map(
+          {videoState.likedVideos.map(
             ({
               _id,
               title,
@@ -87,8 +84,8 @@ const WatchLater = () => {
                     </div>
                   </Link>
                   <button
-                    className="btn btn-primary-outline"
-                    onClick={() => deleteWatchLaterVideo(_id)}
+                    className="btn btn-primary-outline btn-video-align"
+                    onClick={() => deleteLikeVideo(_id)}
                   >
                     Delete
                   </button>
@@ -102,4 +99,4 @@ const WatchLater = () => {
   );
 };
 
-export default WatchLater;
+export default LikePage;

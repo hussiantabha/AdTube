@@ -7,35 +7,71 @@ import "react-toastify/dist/ReactToastify.css";
 
 const Playlist = () => {
   const { videoState, dispatch } = useContext(VideoContext);
-  console.log(videoState);
   const token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIxMjVkM2MzNy01MjcwLTQ5NjgtODQ0MC1iZTM3ZDFhNTE5OGUiLCJlbWFpbCI6ImFkYXJzaGJhbGlrYUBnbWFpbC5jb20ifQ.DPS9hLIaykSx9V9SwXsOhWgWQ7nk8MtTyumcWlbYamM";
   const deletePlaylist = async (id) => {
-    const postData = await fetch(`/api/user/playlists/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-type": "application/json",
-        authorization: token,
-      },
-    });
-    if (postData.status === 200) {
-      const convertedJSON = await postData.json();
-      dispatch({
-        type: "playlistData",
-        payload: { value: convertedJSON.playlists },
+    try {
+      const postData = await fetch(`/api/user/playlists/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-type": "application/json",
+          authorization: token,
+        },
       });
-      toast.success("Deleted Successfully", {
-        position: "top-right",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-      });
-    }
+      if (postData.status === 200) {
+        const convertedJSON = await postData.json();
+        dispatch({
+          type: "playlistData",
+          payload: { value: convertedJSON.playlists },
+        });
+        toast.success("Deleted Successfully", {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    } catch {}
   };
-
+  const deleteVideoPlaylist = async (playListId, videoId) => {
+    try {
+      const deleteData = await fetch(
+        `/api/user/playlists/${playListId}/${videoId}`,
+        {
+          method: "DELETE",
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      if (deleteData.status === 200) {
+        const convertedJSON = await deleteData.json();
+        const getData = await fetch("/api/user/playlists", {
+          method: "GET",
+          headers: {
+            authorization: token,
+          },
+        });
+        const convertedJSON2 = await getData.json();
+        dispatch({
+          type: "playlistData",
+          payload: { value: convertedJSON2.playlists },
+        });
+        toast.success("Video Deleted Successfully", {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+    } catch {}
+  };
   return (
     <>
       <ToastContainer
@@ -52,9 +88,8 @@ const Playlist = () => {
       <NormalNavbar />
       {videoState.playlist.length > 0 ? (
         videoState.playlist.map((item) => {
-          console.log(item.videos);
           return (
-            <>
+            <React.Fragment key={item.videos}>
               <main className="playlist-container">
                 <div className="playlist-top-container">
                   <h2>{item.title}</h2>
@@ -78,7 +113,7 @@ const Playlist = () => {
                       duration,
                     }) => {
                       return (
-                        <div className="video-card-container">
+                        <div className="video-card-container" key={_id}>
                           <Link to={`/video/${_id}`}>
                             <div className="video-img-container">
                               <img src={thumbnail} className="video-img" />
@@ -98,13 +133,19 @@ const Playlist = () => {
                               </div>
                             </div>
                           </Link>
+                          <button
+                            className="btn btn-primary-outline"
+                            onClick={() => deleteVideoPlaylist(item._id, _id)}
+                          >
+                            Delete Video
+                          </button>
                         </div>
                       );
                     }
                   )}
                 </main>
               </main>
-            </>
+            </React.Fragment>
           );
         })
       ) : (
