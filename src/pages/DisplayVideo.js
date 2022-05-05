@@ -159,7 +159,9 @@ const DisplayVideo = () => {
           progress: undefined,
         });
       }
-    } catch {}
+    } catch (error) {
+      console.log(error);
+    }
   };
   const removeLike = async (video) => {
     try {
@@ -208,7 +210,6 @@ const DisplayVideo = () => {
       }
     } catch {}
   };
-  //const likeArr = videoState.likedVideos.filter((item) => item.id === video.id);
   return (
     <>
       <ToastContainer
