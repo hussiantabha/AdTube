@@ -125,9 +125,7 @@ const DisplayVideo = () => {
   useEffect(() => {
     findPlaylist();
   });
-  useEffect(() => {
-    getVideo();
-  }, []);
+
   useEffect(() => {
     getVideo();
   }, [param.videoId]);
@@ -210,6 +208,27 @@ const DisplayVideo = () => {
       }
     } catch {}
   };
+  const addToHistory = async () => {
+    const getData = await fetch(`/api/video/${param.videoId}`);
+    const convertedJSON1 = await getData.json();
+    const postData = await fetch("/api/user/history", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+        authorization: token,
+      },
+      body: JSON.stringify({
+        video: convertedJSON1.video,
+      }),
+    });
+    const convertedJSON = await postData.json();
+    console.log(convertedJSON);
+  };
+  useEffect(() => {
+    getVideo();
+    addToHistory();
+  }, []);
+
   return (
     <>
       <ToastContainer
@@ -262,7 +281,7 @@ const DisplayVideo = () => {
           Add To Playlist
         </button>
       </div>
-      <section>
+      <section className="main-sidebar-flex">
         <main>
           <div className="video-container">
             <iframe
@@ -321,6 +340,34 @@ const DisplayVideo = () => {
             </div>
           </div>
         </main>
+        <section className="sidebar-video-card-container">
+          {videoState.data.map(
+            ({
+              _id,
+              title,
+              thumbnail,
+              avatar_url,
+              creator,
+              views,
+              uploaded,
+              duration,
+            }) => {
+              return (
+                <div className="sidebar-video-card">
+                  <div className="sidebar-video-img-container">
+                    <img src={thumbnail} className="sidebar-video-img" />
+                  </div>
+
+                  <div className="sidebar-video-content-container">
+                    <h3 className="sidebar-title">{title}</h3>
+                    <span className="sidbar-small-text">{creator}</span>
+                    <span>{`${views}. ${uploaded}`}</span>
+                  </div>
+                </div>
+              );
+            }
+          )}
+        </section>
       </section>
     </>
   );

@@ -9,6 +9,7 @@ const Navbar = () => {
   const { videoState, userLoggedIn, dispatch } = useContext(VideoContext);
   const logout = () => {
     sessionStorage.clear();
+    dispatch({ type: "userLoggedIn", payload: { value: false } });
     toast.success("User Logged Out", {
       position: "top-right",
       autoClose: 1000,

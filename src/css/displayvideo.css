@@ -1,3 +1,7 @@
+.main-sidebar-flex {
+  display: flex;
+  justify-content: space-around;
+}
 .video-container {
   width: 780px;
   height: 400px;
@@ -30,15 +34,19 @@
 .sidebar-video-card-container {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .sidebar-video-card {
   border: 1px solid black;
   display: flex;
   padding: 0.5rem;
+  width: 402px;
+  height: 150px;
 }
 .sidebar-video-img-container {
-  width: 200px;
-  height: 150px;
+  width: 180px;
+  height: 180px;
 }
 .sidebar-video-img {
   width: 100%;
@@ -48,6 +56,12 @@
   flex-direction: column;
   justify-content: flex-start;
   row-gap: 0.25rem;
+}
+.sidebar-title {
+  font-size: 0.9rem;
+}
+.sidebar-small-text {
+  font-size: 0.75rem;
 }
 .playlist-modal-hide {
   display: none;

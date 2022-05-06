@@ -12,7 +12,7 @@ export const videos = [
       "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.",
     creator: "Think School",
     avatar_url: "../assets/think-school.jpg",
-    video_url: "https://www.youtube.com/embed/eLT1To94V-Q",
+    video_url: "https://www.youtube.com/embed/eLT1To94V-Q?autoplay=1",
     thumbnail: "../assets/reliance.jpg",
     views: "300K",
     uploaded: "2 days ago",

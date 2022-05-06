@@ -9,7 +9,9 @@
 .playlist-video-card-container {
   display: flex;
   justify-content: flex-start;
+  flex-flow: row wrap;
   column-gap: 3rem;
+  row-gap: 2rem;
 }
 .playlist-top-container {
   display: flex;
