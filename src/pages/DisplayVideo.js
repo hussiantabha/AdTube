@@ -2,17 +2,20 @@ import React, { useState, useEffect, useContext } from "react";
 import { VideoContext } from "../context/Data";
 import NormalNavbar from "../components/NormalNavbar";
 import { BiLike } from "react-icons/bi";
-import { useLocation, useParams } from "react-router-dom";
+import { Link, Navigate, useLocation, useParams } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 const DisplayVideo = () => {
+  let navigate = useNavigate();
   const { videoState, dispatch } = useContext(VideoContext);
   const [playlist, setPlaylist] = useState("");
   const [allPlaylist, setAllPlayist] = useState([]);
   const [video, setVideo] = useState({});
   const [playlistModal, setPlaylistModal] = useState(false);
-  const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIxMjVkM2MzNy01MjcwLTQ5NjgtODQ0MC1iZTM3ZDFhNTE5OGUiLCJlbWFpbCI6ImFkYXJzaGJhbGlrYUBnbWFpbC5jb20ifQ.DPS9hLIaykSx9V9SwXsOhWgWQ7nk8MtTyumcWlbYamM";
+  //const token =
+  //"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIxMjVkM2MzNy01MjcwLTQ5NjgtODQ0MC1iZTM3ZDFhNTE5OGUiLCJlbWFpbCI6ImFkYXJzaGJhbGlrYUBnbWFpbC5jb20ifQ.DPS9hLIaykSx9V9SwXsOhWgWQ7nk8MtTyumcWlbYamM";
+  const token = sessionStorage.getItem("token");
   const param = useParams();
   const getVideo = async () => {
     const getData = await fetch(`/api/video/${param.videoId}`);
@@ -22,140 +25,156 @@ const DisplayVideo = () => {
 
   const findPlaylist = async () => {
     try {
-      const getData = await fetch("/api/user/playlists", {
-        method: "GET",
-        headers: {
-          authorization: token,
-        },
-      });
-      const convertedJSON = await getData.json();
-      dispatch({
-        type: "playlistData",
-        payload: { value: convertedJSON.playlists },
-      });
+      if (videoState.login) {
+        const getData = await fetch("/api/user/playlists", {
+          method: "GET",
+          headers: {
+            authorization: token,
+          },
+        });
+        const convertedJSON = await getData.json();
+        dispatch({
+          type: "playlistData",
+          payload: { value: convertedJSON.playlists },
+        });
+      }
     } catch {}
   };
   const postPlaylist = async () => {
     try {
-      const postData = await fetch("/api/user/playlists", {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-          authorization: token,
-        },
-        body: JSON.stringify({
-          playlist: {
-            title: playlist,
+      if (videoState.login) {
+        const postData = await fetch("/api/user/playlists", {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+            authorization: token,
           },
-        }),
-      });
-      const getData = await fetch("/api/user/playlists", {
-        method: "GET",
-        headers: {
-          authorization: token,
-        },
-      });
-      const convertedJSON = await getData.json();
-      const filtered = await convertedJSON.playlists.filter(
-        (item) => item.title === playlist
-      );
-      const postData2 = await fetch(`/api/user/playlists/${filtered[0]._id}`, {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-          authorization: token,
-        },
-        body: JSON.stringify({
-          video,
-        }),
-      });
-      if (postData2.status === 201) {
-        toast.success("Added Successfully", {
-          position: "top-right",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
+          body: JSON.stringify({
+            playlist: {
+              title: playlist,
+            },
+          }),
         });
+        const getData = await fetch("/api/user/playlists", {
+          method: "GET",
+          headers: {
+            authorization: token,
+          },
+        });
+        const convertedJSON = await getData.json();
+        const filtered = await convertedJSON.playlists.filter(
+          (item) => item.title === playlist
+        );
+        const postData2 = await fetch(
+          `/api/user/playlists/${filtered[0]._id}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-type": "application/json",
+              authorization: token,
+            },
+            body: JSON.stringify({
+              video,
+            }),
+          }
+        );
+        if (postData2.status === 201) {
+          toast.success("Added Successfully", {
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+          });
+        }
+        setPlaylist("");
+        setPlaylistModal(false);
+      } else {
+        navigate("/login");
       }
-      setPlaylist("");
-      setPlaylistModal(false);
     } catch {}
   };
   const addVideoToPlaylist = async () => {
     try {
-      allPlaylist.map((item) => {
-        const playlistVideoState = videoState.playlist.filter(
-          (element) => element.title === item
-        );
-        const innerFunc = async () => {
-          const postData = await fetch(
-            `/api/user/playlists/${playlistVideoState[0]._id}`,
-            {
-              method: "POST",
-              headers: {
-                "Content-type": "application/json",
-                authorization: token,
-              },
-              body: JSON.stringify({
-                video,
-              }),
-            }
+      if (videoState.login) {
+        allPlaylist.map((item) => {
+          const playlistVideoState = videoState.playlist.filter(
+            (element) => element.title === item
           );
-          if (postData.status === 201) {
-            toast.success("Added Successfully", {
-              position: "top-right",
-              autoClose: 1000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: false,
-              draggable: true,
-              progress: undefined,
-            });
-          }
-        };
-        innerFunc();
-        return;
-      });
-      setPlaylistModal(false);
+          const innerFunc = async () => {
+            const postData = await fetch(
+              `/api/user/playlists/${playlistVideoState[0]._id}`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-type": "application/json",
+                  authorization: token,
+                },
+                body: JSON.stringify({
+                  video,
+                }),
+              }
+            );
+            if (postData.status === 201) {
+              toast.success("Added Successfully", {
+                position: "top-right",
+                autoClose: 1000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+              });
+            }
+          };
+          innerFunc();
+          return;
+        });
+        setPlaylistModal(false);
+      } else {
+        navigate("/login");
+      }
     } catch {}
   };
   useEffect(() => {
     findPlaylist();
   });
-
   useEffect(() => {
     getVideo();
   }, [param.videoId]);
   const likeVideo = async (video) => {
     try {
-      const postData = await fetch(`/api/user/likes`, {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-          authorization: token,
-        },
-        body: JSON.stringify({
-          video,
-        }),
-      });
-      if (postData.status === 201) {
-        const convertedJSON = await postData.json();
-        dispatch({
-          type: "likedVideos",
-          payload: { value: convertedJSON.likes },
+      if (videoState.login) {
+        const postData = await fetch(`/api/user/likes`, {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+            authorization: token,
+          },
+          body: JSON.stringify({
+            video,
+          }),
         });
-        toast.success("Added Successfully", {
-          position: "top-right",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-        });
+        if (postData.status === 201) {
+          const convertedJSON = await postData.json();
+          dispatch({
+            type: "likedVideos",
+            payload: { value: convertedJSON.likes },
+          });
+          toast.success("Added Successfully", {
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+          });
+        }
+      } else {
+        navigate("/login");
       }
     } catch (error) {
       console.log(error);
@@ -180,55 +199,60 @@ const DisplayVideo = () => {
   };
   const addWatchLater = async (video) => {
     try {
-      const postData = await fetch("/api/user/watchlater", {
+      if (videoState.login) {
+        const postData = await fetch("/api/user/watchlater", {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+            authorization: token,
+          },
+          body: JSON.stringify({
+            video,
+          }),
+        });
+        if (postData.status === 201) {
+          const convertedJSON = await postData.json();
+          dispatch({
+            type: "watchLaterVideos",
+            payload: { value: convertedJSON.watchlater },
+          });
+          toast.success("Added Successfully", {
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+          });
+        }
+      } else {
+        navigate("/login");
+      }
+    } catch {}
+  };
+  const addToHistory = async () => {
+    if (videoState.login) {
+      const getData = await fetch(`/api/video/${param.videoId}`);
+      const convertedJSON1 = await getData.json();
+      const postData = await fetch("/api/user/history", {
         method: "POST",
         headers: {
           "Content-type": "application/json",
           authorization: token,
         },
         body: JSON.stringify({
-          video,
+          video: convertedJSON1.video,
         }),
       });
-      if (postData.status === 201) {
-        const convertedJSON = await postData.json();
-        dispatch({
-          type: "watchLaterVideos",
-          payload: { value: convertedJSON.watchlater },
-        });
-        toast.success("Added Successfully", {
-          position: "top-right",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-        });
-      }
-    } catch {}
-  };
-  const addToHistory = async () => {
-    const getData = await fetch(`/api/video/${param.videoId}`);
-    const convertedJSON1 = await getData.json();
-    const postData = await fetch("/api/user/history", {
-      method: "POST",
-      headers: {
-        "Content-type": "application/json",
-        authorization: token,
-      },
-      body: JSON.stringify({
-        video: convertedJSON1.video,
-      }),
-    });
-    const convertedJSON = await postData.json();
-    console.log(convertedJSON);
+      const convertedJSON = await postData.json();
+      console.log(convertedJSON);
+    }
   };
   useEffect(() => {
     getVideo();
     addToHistory();
   }, []);
-
   return (
     <>
       <ToastContainer
@@ -299,7 +323,7 @@ const DisplayVideo = () => {
               <h2>{video.title}</h2>
               <div className="video-container-icons">
                 <div>
-                  <h5>{`${video.views} . ${video.uploadedDate}`}</h5>
+                  <h5>{`${video.views} views . ${video.uploadedDate}`}</h5>
                 </div>
                 <div>
                   <div className="video-icon">
@@ -323,7 +347,9 @@ const DisplayVideo = () => {
                     <button
                       className="btn btn-primary-outline"
                       onClick={() => {
-                        setPlaylistModal((prev) => !prev);
+                        videoState.login
+                          ? setPlaylistModal((prev) => !prev)
+                          : navigate("/login");
                       }}
                     >
                       Add to Playlist
@@ -339,6 +365,13 @@ const DisplayVideo = () => {
               </div>
             </div>
           </div>
+          <section className="comment-container">
+            <input
+              className="comment-input"
+              placeholder="Add Your Comment (Not Functional)"
+            />
+            <button className="btn btn-primary-outline">Comment</button>
+          </section>
         </main>
         <section className="sidebar-video-card-container">
           {videoState.data.map(
@@ -353,16 +386,17 @@ const DisplayVideo = () => {
               duration,
             }) => {
               return (
-                <div className="sidebar-video-card">
-                  <div className="sidebar-video-img-container">
-                    <img src={thumbnail} className="sidebar-video-img" />
-                  </div>
-
-                  <div className="sidebar-video-content-container">
-                    <h3 className="sidebar-title">{title}</h3>
-                    <span className="sidbar-small-text">{creator}</span>
-                    <span>{`${views}. ${uploaded}`}</span>
-                  </div>
+                <div key={_id}>
+                  <Link to={`/video/${_id}`} className="sidebar-video-card">
+                    <div className="sidebar-img-container">
+                      <img src={thumbnail} className="sidebar-img" />
+                    </div>
+                    <div className="sidebar-video-card-content">
+                      <p>{title}</p>
+                      <span className="f-14px">{creator}</span>
+                      <span className="f-14px">{`${views}. ${uploaded}`}</span>
+                    </div>
+                  </Link>
                 </div>
               );
             }
@@ -374,3 +408,16 @@ const DisplayVideo = () => {
 };
 
 export default DisplayVideo;
+{
+  /* <div className="sidebar-video-img-container">
+                    <img
+                      src={"https://picsum.photos/120"}
+                      className="sidebar-video-img"
+                    />
+                  </div>
+                  <div className="sidebar-video-content-container">
+                    <h3 className="sidebar-title">{title}</h3>
+                    <span className="sidbar-small-text">{creator}</span>
+                    <span>{`${views}. ${uploaded}`}</span>
+                  </div> */
+}
