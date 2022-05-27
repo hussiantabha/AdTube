@@ -4,8 +4,11 @@ import { VideoContext } from "../context/Data";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteLikeVideoReducer, getLikedData } from "../features/like";
 const LikePage = () => {
-  const { videoState, dispatch } = useContext(VideoContext);
+  //const { videoState, dispatch } = useContext(VideoContext);
+  const dispatch1 = useDispatch();
   const token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIxMjVkM2MzNy01MjcwLTQ5NjgtODQ0MC1iZTM3ZDFhNTE5OGUiLCJlbWFpbCI6ImFkYXJzaGJhbGlrYUBnbWFpbC5jb20ifQ.DPS9hLIaykSx9V9SwXsOhWgWQ7nk8MtTyumcWlbYamM";
   const deleteLikeVideo = async (id) => {
@@ -17,10 +20,11 @@ const LikePage = () => {
     });
     if (deleteData.status === 200) {
       const convertedJSON = await deleteData.json();
-      dispatch({
-        type: "likedVideos",
-        payload: { value: convertedJSON.likes },
-      });
+      // dispatch({
+      //   type: "likedVideos",
+      //   payload: { value: convertedJSON.likes },
+      // });
+      dispatch1(deleteLikeVideoReducer({ value: convertedJSON.likes }));
       toast.success("Deleted Successfully", {
         position: "top-right",
         autoClose: 1000,
@@ -32,6 +36,11 @@ const LikePage = () => {
       });
     }
   };
+
+  const { likeVideos } = useSelector((store) => store.like);
+  useEffect(() => {
+    dispatch1(getLikedData(token));
+  }, []);
   return (
     <>
       <ToastContainer
@@ -49,14 +58,14 @@ const LikePage = () => {
 
       <main className="playlist-container">
         <div className="playlist-top-container">
-          {videoState.likedVideos.length > 0 ? (
+          {likeVideos.length > 0 ? (
             <h2>Liked Videos</h2>
           ) : (
             <h2>No Liked Videos</h2>
           )}
         </div>
         <section className="playlist-video-card-container">
-          {videoState.likedVideos.map(
+          {likeVideos.map(
             ({
               _id,
               title,

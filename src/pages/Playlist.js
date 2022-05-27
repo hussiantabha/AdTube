@@ -4,11 +4,19 @@ import { VideoContext } from "../context/Data";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  deletePlaylistReducer,
+  deletePlaylistVideoReducer,
+  getPlaylistData23,
+} from "../features/playlist";
 
 const Playlist = () => {
-  const { videoState, dispatch } = useContext(VideoContext);
+  //const { videoState, dispatch } = useContext(VideoContext);
   const token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIxMjVkM2MzNy01MjcwLTQ5NjgtODQ0MC1iZTM3ZDFhNTE5OGUiLCJlbWFpbCI6ImFkYXJzaGJhbGlrYUBnbWFpbC5jb20ifQ.DPS9hLIaykSx9V9SwXsOhWgWQ7nk8MtTyumcWlbYamM";
+  const { playlist, isLoading } = useSelector((store) => store.playlist);
+  const dispatch1 = useDispatch();
   const deletePlaylist = async (id) => {
     try {
       const postData = await fetch(`/api/user/playlists/${id}`, {
@@ -20,10 +28,11 @@ const Playlist = () => {
       });
       if (postData.status === 200) {
         const convertedJSON = await postData.json();
-        dispatch({
-          type: "playlistData",
-          payload: { value: convertedJSON.playlists },
-        });
+        // dispatch({
+        //   type: "playlistData",
+        //   payload: { value: convertedJSON.playlists },
+        // });
+        dispatch1(deletePlaylistReducer({ value: convertedJSON.playlists }));
         toast.success("Deleted Successfully", {
           position: "top-right",
           autoClose: 1000,
@@ -56,10 +65,13 @@ const Playlist = () => {
           },
         });
         const convertedJSON2 = await getData.json();
-        dispatch({
-          type: "playlistData",
-          payload: { value: convertedJSON2.playlists },
-        });
+        // dispatch({
+        //   type: "playlistData",
+        //   payload: { value: convertedJSON2.playlists },
+        // });
+        dispatch1(
+          deletePlaylistVideoReducer({ value: convertedJSON2.playlists })
+        );
         toast.success("Video Deleted Successfully", {
           position: "top-right",
           autoClose: 1000,
@@ -72,6 +84,10 @@ const Playlist = () => {
       }
     } catch {}
   };
+  useEffect(() => {
+    dispatch1(getPlaylistData23(token));
+  }, []);
+  console.log(playlist);
   return (
     <>
       <ToastContainer
@@ -86,8 +102,8 @@ const Playlist = () => {
         pauseOnHover={false}
       />
       <NormalNavbar />
-      {videoState.playlist.length > 0 ? (
-        videoState.playlist.map((item) => {
+      {playlist.length > 0 ? (
+        playlist.map((item) => {
           return (
             <React.Fragment key={item.videos}>
               <main className="playlist-container">

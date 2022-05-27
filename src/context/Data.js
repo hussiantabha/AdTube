@@ -20,9 +20,6 @@ const VideoContextProvider = ({ children }) => {
       case "watchLaterVideos": {
         return { ...state, watchLater: action.payload.value };
       }
-      case "historyVideos": {
-        return { ...state, history: action.payload.value };
-      }
       default: {
         return { ...state };
       }
@@ -34,7 +31,6 @@ const VideoContextProvider = ({ children }) => {
     playlist: [],
     likedVideos: [],
     watchLater: [],
-    history: [],
   });
   useEffect(async () => {
     const getData = await fetch("/api/videos");
@@ -43,17 +39,15 @@ const VideoContextProvider = ({ children }) => {
   }, []);
 
   const [userLoggedIn, setUserLoggedIn] = useState(false);
-  const token = sessionStorage.getItem("token");
-  useEffect(() => {
-    if (sessionStorage.getItem("token") === null) {
-      dispatch({ type: "userLoggedIn", payload: { value: false } });
-    } else if (sessionStorage.getItem("token") === "undefined") {
-      dispatch({ type: "userLoggedIn", payload: { value: false } });
-    } else {
-      dispatch({ type: "userLoggedIn", payload: { value: true } });
-    }
-  }, []);
-
+  // useEffect(() => {
+  //   if (sessionStorage.getItem("token") === null) {
+  //     dispatch({ type: "userLoggedIn", payload: { value: false } });
+  //   } else if (sessionStorage.getItem("token") === "undefined") {
+  //     dispatch({ type: "userLoggedIn", payload: { value: false } });
+  //   } else {
+  //     dispatch({ type: "userLoggedIn", payload: { value: true } });
+  //   }
+  // }, [videoState]);
   return (
     <>
       <VideoContext.Provider

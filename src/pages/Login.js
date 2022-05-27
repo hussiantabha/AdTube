@@ -10,9 +10,8 @@ import { VideoContext } from "../context/Data";
 
 const Login = () => {
   let location = useLocation();
-  const { setUserLoggedIn, dispatch } = useContext(VideoContext);
+  const { setUserLoggedIn } = useContext(VideoContext);
   let navigate = useNavigate();
-  console.log(location);
   const [loginInput, setLoginInput] = useState({ email: "", password: "" });
   const loginFunc = async () => {
     try {
@@ -27,8 +26,7 @@ const Login = () => {
         const convertedJSON = await postData.json();
         sessionStorage.setItem("token", convertedJSON.encodedToken);
         setLoginInput({ email: "", password: "" });
-        dispatch({ type: "userLoggedIn", payload: { value: true } });
-        navigate(location.state === null ? "/" : location.state.from.pathname);
+        navigate(location.state.from.pathname || "/");
       }
       if (postData.status === 404) {
         toast.error("Wrong Details", {
@@ -60,7 +58,6 @@ const Login = () => {
         const convertedJSON = await postData.json();
         sessionStorage.setItem("token", convertedJSON.encodedToken);
         setLoginInput({ email: "", password: "" });
-        dispatch({ type: "userLoggedIn", payload: { value: true } });
         navigate(location.state === null ? "/" : location.state.from.pathname);
       }
       if (postData.status === 404) {
