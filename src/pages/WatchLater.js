@@ -10,7 +10,6 @@ import {
   getWatchLaterVideos,
 } from "../features/watchLater";
 const WatchLater = () => {
-  // const { videoState, dispatch } = useContext(VideoContext);
   const dispatch1 = useDispatch();
   const token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIxMjVkM2MzNy01MjcwLTQ5NjgtODQ0MC1iZTM3ZDFhNTE5OGUiLCJlbWFpbCI6ImFkYXJzaGJhbGlrYUBnbWFpbC5jb20ifQ.DPS9hLIaykSx9V9SwXsOhWgWQ7nk8MtTyumcWlbYamM";
@@ -25,10 +24,6 @@ const WatchLater = () => {
       if (deleteData.status === 200) {
         const convertedJSON = await deleteData.json();
         dispatch1(deleteWatchLaterReducer({ value: convertedJSON.watchlater }));
-        // dispatch({
-        //   type: "watchLaterVideos",
-        //   payload: { value: convertedJSON.watchlater },
-        // });
         toast.success("Deleted Successfully", {
           position: "top-right",
           autoClose: 1000,

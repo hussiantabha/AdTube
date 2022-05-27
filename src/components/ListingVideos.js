@@ -5,7 +5,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { getVideos } from "../features/video";
 
 const ListingVideos = () => {
-  const { videoState, dispatch } = useContext(VideoContext);
   const dispatch1 = useDispatch();
   const { videos, isLoading } = useSelector((store) => store.video);
   useEffect(() => {

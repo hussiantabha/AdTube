@@ -8,8 +8,10 @@
 }
 .playlist-video-card-container {
   display: flex;
+  flex-flow: row wrap;
   justify-content: flex-start;
   column-gap: 3rem;
+  row-gap: 1.5rem;
 }
 .playlist-top-container {
   display: flex;

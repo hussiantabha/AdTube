@@ -12,7 +12,6 @@ import { addWatchLaterReducer } from "../features/watchLater";
 import { addHistoryData } from "../features/history";
 import { addPlaylistData } from "../features/playlist";
 const DisplayVideo = () => {
-  //const { videoState, dispatch } = useContext(VideoContext);
   const [playlist, setPlaylist] = useState("");
   const [allPlaylist, setAllPlayist] = useState([]);
   const [video, setVideo] = useState({});
@@ -40,10 +39,6 @@ const DisplayVideo = () => {
         },
       });
       const convertedJSON = await getData.json();
-      // dispatch({
-      //   type: "playlistData",
-      //   payload: { value: convertedJSON.playlists },
-      // });
       dispatch1(addPlaylistData({ value: convertedJSON.playlists }));
     } catch {}
   };
@@ -142,9 +137,6 @@ const DisplayVideo = () => {
       setPlaylistModal(false);
     } catch {}
   };
-  // useEffect(() => {
-  //   findPlaylist();
-  // });
   useEffect(() => {
     getVideo();
   }, []);
@@ -166,10 +158,6 @@ const DisplayVideo = () => {
       if (postData.status === 201) {
         const convertedJSON = await postData.json();
         dispatch1(addLikeVideo({ value: convertedJSON.likes }));
-        // dispatch({
-        //   type: "likedVideos",
-        //   payload: { value: convertedJSON.likes },
-        // });
         toast.success("Added Successfully", {
           position: "top-right",
           autoClose: 1000,
@@ -194,10 +182,6 @@ const DisplayVideo = () => {
       });
       if (deleteData.status === 200) {
         const convertedJSON = await deleteData.json();
-        // dispatch({
-        //   type: "likedVideos",
-        //   payload: { value: convertedJSON.likes },
-        // });
         dispatch1(deleteLikeVideoReducer({ value: convertedJSON.likes }));
       }
     } catch {}
@@ -217,10 +201,6 @@ const DisplayVideo = () => {
       if (postData.status === 201) {
         const convertedJSON = await postData.json();
         dispatch1(addWatchLaterReducer({ value: convertedJSON.watchlater }));
-        // dispatch({
-        //   type: "watchLaterVideos",
-        //   payload: { value: convertedJSON.watchlater },
-        // });
         toast.success("Added Successfully", {
           position: "top-right",
           autoClose: 1000,

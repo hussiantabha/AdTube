@@ -15,6 +15,7 @@ import LikePage from "./pages/LikePage";
 import { Provider } from "react-redux";
 import { store } from "./store";
 import History from "./pages/History";
+import { RequireAuth } from "./context/Auth";
 // Call make Server
 makeServer();
 
@@ -28,10 +29,38 @@ ReactDOM.render(
           <Route path="/mockman" element={<MockAPI />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/like" element={<LikePage />} />
-          <Route path="/playlist" element={<Playlist />} />
-          <Route path="/watchlater" element={<WatchLater />} />
-          <Route path="/history" element={<History />} />
+          <Route
+            path="/like"
+            element={
+              <RequireAuth>
+                <LikePage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/playlist"
+            element={
+              <RequireAuth>
+                <Playlist />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/watchlater"
+            element={
+              <RequireAuth>
+                <WatchLater />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/history"
+            element={
+              <RequireAuth>
+                <History />
+              </RequireAuth>
+            }
+          />
         </Routes>
       </Provider>
     </VideoContextProvider>

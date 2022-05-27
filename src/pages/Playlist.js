@@ -12,7 +12,6 @@ import {
 } from "../features/playlist";
 
 const Playlist = () => {
-  //const { videoState, dispatch } = useContext(VideoContext);
   const token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIxMjVkM2MzNy01MjcwLTQ5NjgtODQ0MC1iZTM3ZDFhNTE5OGUiLCJlbWFpbCI6ImFkYXJzaGJhbGlrYUBnbWFpbC5jb20ifQ.DPS9hLIaykSx9V9SwXsOhWgWQ7nk8MtTyumcWlbYamM";
   const { playlist, isLoading } = useSelector((store) => store.playlist);

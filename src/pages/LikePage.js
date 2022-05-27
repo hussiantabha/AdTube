@@ -1,13 +1,11 @@
 import React, { useContext, useState, useEffect } from "react";
 import NormalNavbar from "../components/NormalNavbar";
-import { VideoContext } from "../context/Data";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteLikeVideoReducer, getLikedData } from "../features/like";
 const LikePage = () => {
-  //const { videoState, dispatch } = useContext(VideoContext);
   const dispatch1 = useDispatch();
   const token =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIxMjVkM2MzNy01MjcwLTQ5NjgtODQ0MC1iZTM3ZDFhNTE5OGUiLCJlbWFpbCI6ImFkYXJzaGJhbGlrYUBnbWFpbC5jb20ifQ.DPS9hLIaykSx9V9SwXsOhWgWQ7nk8MtTyumcWlbYamM";

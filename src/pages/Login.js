@@ -6,11 +6,11 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import "../css/login.css";
 import NormalNavbar from "../components/NormalNavbar";
-import { VideoContext } from "../context/Data";
-
+import { useDispatch } from "react-redux";
+import { loginState } from "../features/login";
 const Login = () => {
   let location = useLocation();
-  const { setUserLoggedIn } = useContext(VideoContext);
+  const dispatch1 = useDispatch();
   let navigate = useNavigate();
   const [loginInput, setLoginInput] = useState({ email: "", password: "" });
   const loginFunc = async () => {
@@ -26,6 +26,7 @@ const Login = () => {
         const convertedJSON = await postData.json();
         sessionStorage.setItem("token", convertedJSON.encodedToken);
         setLoginInput({ email: "", password: "" });
+        dispatch1(loginState({ value: true }));
         navigate(location.state.from.pathname || "/");
       }
       if (postData.status === 404) {
@@ -57,6 +58,7 @@ const Login = () => {
       if (postData.status === 200) {
         const convertedJSON = await postData.json();
         sessionStorage.setItem("token", convertedJSON.encodedToken);
+        dispatch1(loginState({ value: true }));
         setLoginInput({ email: "", password: "" });
         navigate(location.state === null ? "/" : location.state.from.pathname);
       }
