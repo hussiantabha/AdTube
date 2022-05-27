@@ -14,7 +14,7 @@ const Sidebar = () => {
           <BiLike className="sidebar-item-icon" />
           <span>Liked</span>
         </Link>
-        <Link to="/" className="sidebar-item">
+        <Link to="/history" className="sidebar-item">
           <BiHistory className="sidebar-item-icon" />
           <span>History</span>
         </Link>

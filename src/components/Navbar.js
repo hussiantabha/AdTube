@@ -9,6 +9,7 @@ const Navbar = () => {
   const { videoState, userLoggedIn, dispatch } = useContext(VideoContext);
   const logout = () => {
     sessionStorage.clear();
+    dispatch({ type: "userLoggedIn", payload: { value: false } });
     toast.success("User Logged Out", {
       position: "top-right",
       autoClose: 1000,
@@ -24,7 +25,7 @@ const Navbar = () => {
     <>
       <ToastContainer
         position="top-right"
-        autoClose={5000}
+        autoClose={1000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
