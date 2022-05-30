@@ -36,13 +36,13 @@ const History = () => {
               duration,
             }) => {
               return (
-                <div className="video-card-container" key={_id}>
+                <div className="playlist-video-card-container-2" key={_id}>
                   <Link to={`/video/${_id}`}>
                     <div className="video-img-container">
                       <img src={thumbnail} className="video-img" />
                       <span className="video-duration-badge">{duration}</span>
                     </div>
-                    <div className="video-content-container">
+                    <div className="video-content-container-playlist">
                       <img src={avatar_url} className="creator-avatar" />
                       <div className="video-text-container">
                         <h3>{title}</h3>
@@ -52,7 +52,7 @@ const History = () => {
                     </div>
                   </Link>
                   <button
-                    className="btn btn-primary-outline"
+                    className="btn btn-primary-outline btn-playlist"
                     onClick={() => deleteWatchLaterVideo(_id)}
                   >
                     Delete

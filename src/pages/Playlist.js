@@ -27,10 +27,6 @@ const Playlist = () => {
       });
       if (postData.status === 200) {
         const convertedJSON = await postData.json();
-        // dispatch({
-        //   type: "playlistData",
-        //   payload: { value: convertedJSON.playlists },
-        // });
         dispatch1(deletePlaylistReducer({ value: convertedJSON.playlists }));
         toast.success("Deleted Successfully", {
           position: "top-right",
@@ -86,7 +82,6 @@ const Playlist = () => {
   useEffect(() => {
     dispatch1(getPlaylistData23(token));
   }, []);
-  console.log(playlist);
   return (
     <>
       <ToastContainer
@@ -128,7 +123,10 @@ const Playlist = () => {
                       duration,
                     }) => {
                       return (
-                        <div className="video-card-container" key={_id}>
+                        <div
+                          className="playlist-video-card-container-2"
+                          key={_id}
+                        >
                           <Link to={`/video/${_id}`}>
                             <div className="video-img-container">
                               <img src={thumbnail} className="video-img" />
@@ -136,7 +134,7 @@ const Playlist = () => {
                                 {duration}
                               </span>
                             </div>
-                            <div className="video-content-container">
+                            <div className="video-content-container-playlist">
                               <img
                                 src={avatar_url}
                                 className="creator-avatar"
@@ -149,7 +147,7 @@ const Playlist = () => {
                             </div>
                           </Link>
                           <button
-                            className="btn btn-primary-outline"
+                            className="btn btn-primary-outline btn-playlist"
                             onClick={() => deleteVideoPlaylist(item._id, _id)}
                           >
                             Delete Video
