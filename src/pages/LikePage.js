@@ -4,7 +4,11 @@ import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteLikeVideoReducer, getLikedData } from "../features/like";
+import {
+  deleteLikeVideoReducer,
+  getLikedData,
+  updateLikeVideo,
+} from "../features/like";
 const LikePage = () => {
   const dispatch1 = useDispatch();
   const token =
@@ -18,11 +22,8 @@ const LikePage = () => {
     });
     if (deleteData.status === 200) {
       const convertedJSON = await deleteData.json();
-      // dispatch({
-      //   type: "likedVideos",
-      //   payload: { value: convertedJSON.likes },
-      // });
-      dispatch1(deleteLikeVideoReducer({ value: convertedJSON.likes }));
+      // dispatch1(deleteLikeVideoReducer({ value: convertedJSON.likes }));
+      dispatch1(updateLikeVideo({ value: convertedJSON.likes }));
       toast.success("Deleted Successfully", {
         position: "top-right",
         autoClose: 1000,
@@ -75,13 +76,13 @@ const LikePage = () => {
               duration,
             }) => {
               return (
-                <div className="video-card-container" key={_id}>
+                <div className="playlist-video-card-container-2" key={_id}>
                   <Link to={`/video/${_id}`}>
                     <div className="video-img-container">
                       <img src={thumbnail} className="video-img" />
                       <span className="video-duration-badge">{duration}</span>
                     </div>
-                    <div className="video-content-container">
+                    <div className="video-content-container-playlist">
                       <img src={avatar_url} className="creator-avatar" />
                       <div className="video-text-container">
                         <h3>{title}</h3>
@@ -91,7 +92,7 @@ const LikePage = () => {
                     </div>
                   </Link>
                   <button
-                    className="btn btn-primary-outline btn-video-align"
+                    className="btn btn-primary-outline btn-playlist"
                     onClick={() => deleteLikeVideo(_id)}
                   >
                     Delete

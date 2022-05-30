@@ -25,10 +25,7 @@ const likeSlice = createSlice({
   name: "like",
   initialState,
   reducers: {
-    addLikeVideo: (state, action) => {
-      state.likeVideos = action.payload.value;
-    },
-    deleteLikeVideoReducer: (state, action) => {
+    updateLikeVideo: (state, action) => {
       state.likeVideos = action.payload.value;
     },
   },
@@ -45,5 +42,5 @@ const likeSlice = createSlice({
     },
   },
 });
-export const { addLikeVideo, deleteLikeVideoReducer } = likeSlice.actions;
+export const { updateLikeVideo } = likeSlice.actions;
 export default likeSlice.reducer;

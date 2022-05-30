@@ -3,8 +3,6 @@ const initialState = {
   playlist: [],
   isLoading: false,
 };
-// const token =
-//   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiIxMjVkM2MzNy01MjcwLTQ5NjgtODQ0MC1iZTM3ZDFhNTE5OGUiLCJlbWFpbCI6ImFkYXJzaGJhbGlrYUBnbWFpbC5jb20ifQ.DPS9hLIaykSx9V9SwXsOhWgWQ7nk8MtTyumcWlbYamM";
 export const getPlaylistData23 = createAsyncThunk(
   "video/playlist",
   async (token) => {
@@ -33,7 +31,6 @@ const playlistSlice = createSlice({
       state.playlist = action.payload.value;
     },
     deletePlaylistVideoReducer: (state, action) => {
-      console.log(action);
       state.playlist = action.payload.value;
     },
   },
@@ -42,7 +39,6 @@ const playlistSlice = createSlice({
       state.isLoading = true;
     },
     [getPlaylistData23.fulfilled]: (state, action) => {
-      console.log(action);
       state.playlist = action.payload.playlists;
       state.isLoading = false;
     },

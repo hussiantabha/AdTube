@@ -7,7 +7,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector, useDispatch } from "react-redux";
 import { getVideos } from "../features/video";
-import { addLikeVideo, deleteLikeVideoReducer } from "../features/like";
+import { updateLikeVideo } from "../features/like";
 import { addWatchLaterReducer } from "../features/watchLater";
 import { addHistoryData } from "../features/history";
 import { addPlaylistData } from "../features/playlist";
@@ -157,7 +157,8 @@ const DisplayVideo = () => {
       });
       if (postData.status === 201) {
         const convertedJSON = await postData.json();
-        dispatch1(addLikeVideo({ value: convertedJSON.likes }));
+        // dispatch1(addLikeVideo({ value: convertedJSON.likes }));
+        dispatch1(updateLikeVideo({ value: convertedJSON.likes }));
         toast.success("Added Successfully", {
           position: "top-right",
           autoClose: 1000,
@@ -182,7 +183,8 @@ const DisplayVideo = () => {
       });
       if (deleteData.status === 200) {
         const convertedJSON = await deleteData.json();
-        dispatch1(deleteLikeVideoReducer({ value: convertedJSON.likes }));
+        // dispatch1(deleteLikeVideoReducer({ value: convertedJSON.likes }));
+        dispatch1(updateLikeVideo({ value: convertedJSON.likes }));
       }
     } catch {}
   };
