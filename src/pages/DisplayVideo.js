@@ -11,6 +11,7 @@ import { updateLikeVideo } from "../features/like";
 import { addWatchLaterReducer } from "../features/watchLater";
 import { addHistoryData } from "../features/history";
 import { addPlaylistData } from "../features/playlist";
+import DisplaySidebarVideo from "../components/DisplaySidebarVideo";
 const DisplayVideo = () => {
   const [playlist, setPlaylist] = useState("");
   const [allPlaylist, setAllPlayist] = useState([]);
@@ -238,10 +239,8 @@ const DisplayVideo = () => {
     } catch (err) {}
   };
   useEffect(() => {
-    addHistory(video);
-  }, []);
-  useEffect(() => {
     dispatch1(getVideos());
+    addHistory(video);
   }, []);
 
   return (
@@ -258,104 +257,109 @@ const DisplayVideo = () => {
         pauseOnHover={false}
       />
       <NormalNavbar />
-      <div className={playlistModal ? "playlist-modal" : "playlist-modal-hide"}>
-        <h3>Create Playlist</h3>
-        <div className="playlist-modal-top-container">
-          <input
-            type="text"
-            onChange={(e) => setPlaylist(e.target.value)}
-            value={playlist}
-            className="playlist-input"
-          />
-          <button className="btn-modal" onClick={postPlaylist}>
-            Add
+      <main className="two-col">
+        <div
+          className={playlistModal ? "playlist-modal" : "playlist-modal-hide"}
+        >
+          <h3>Create Playlist</h3>
+          <div className="playlist-modal-top-container">
+            <input
+              type="text"
+              onChange={(e) => setPlaylist(e.target.value)}
+              value={playlist}
+              className="playlist-input"
+            />
+            <button className="btn-modal" onClick={postPlaylist}>
+              Add
+            </button>
+          </div>
+          {playlistData.playlist.map((element) => {
+            return (
+              <div className="individual-playlist" key={element.title}>
+                <input
+                  type="checkbox"
+                  value={element.title}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setAllPlayist((prev) => [...prev, e.target.value]);
+                    } else {
+                      setAllPlayist(
+                        allPlaylist.filter((item) => item !== e.target.value)
+                      );
+                    }
+                  }}
+                  name={element.title}
+                />
+                <p>{element.title}</p>
+              </div>
+            );
+          })}
+          <button className="btn-modal-fullWidth" onClick={addVideoToPlaylist}>
+            Add To Playlist
           </button>
         </div>
-        {playlistData.playlist.map((element) => {
-          return (
-            <div className="individual-playlist" key={element.title}>
-              <input
-                type="checkbox"
-                value={element.title}
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    setAllPlayist((prev) => [...prev, e.target.value]);
-                  } else {
-                    setAllPlayist(
-                      allPlaylist.filter((item) => item !== e.target.value)
-                    );
-                  }
-                }}
-                name={element.title}
-              />
-              <p>{element.title}</p>
-            </div>
-          );
-        })}
-        <button className="btn-modal-fullWidth" onClick={addVideoToPlaylist}>
-          Add To Playlist
-        </button>
-      </div>
-      <section>
-        <main>
-          <div className="video-container">
-            <iframe
-              width="100%"
-              height="100%"
-              src={video.video_url}
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen="1"
-              className="video-iframe"
-            ></iframe>
+        <section>
+          <main>
+            <div className="video-container">
+              <iframe
+                width="100%"
+                height="100%"
+                src={video.video_url}
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen="1"
+                className="video-iframe"
+              ></iframe>
 
-            <div className="video-container-content">
-              <h2>{video.title}</h2>
-              <div className="video-container-icons">
-                <div>
-                  <h5>{`${video.views} . ${video.uploadedDate}`}</h5>
-                </div>
-                <div>
-                  <div className="video-icon">
-                    {likedVideos.likeVideos.filter(
-                      (item) => item.id === video.id
-                    ).length === 1 ? (
+              <div className="video-container-content">
+                <h2 className="y-1">{video.title}</h2>
+                <div className="video-container-icons">
+                  <div>
+                    <h5>{`${video.views} . ${video.uploadedDate}`}</h5>
+                  </div>
+                  <div>
+                    <div className="video-icon">
+                      {likedVideos.likeVideos.filter(
+                        (item) => item.id === video.id
+                      ).length === 1 ? (
+                        <button
+                          onClick={() => removeLike(video)}
+                          className="btn btn-primary btn-like"
+                        >
+                          Liked
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => likeVideo(video)}
+                          className="btn btn-primary-outline btn-like"
+                        >
+                          <BiLike /> Like
+                        </button>
+                      )}
                       <button
-                        onClick={() => removeLike(video)}
-                        className="btn btn-primary btn-like"
+                        className="btn btn-primary-outline"
+                        onClick={() => {
+                          setPlaylistModal((prev) => !prev);
+                        }}
                       >
-                        Liked
+                        Add to Playlist
                       </button>
-                    ) : (
                       <button
-                        onClick={() => likeVideo(video)}
-                        className="btn btn-primary-outline btn-like"
+                        className="btn btn-primary-outline"
+                        onClick={() => addWatchLater(video)}
                       >
-                        <BiLike /> Like
+                        Watch Later
                       </button>
-                    )}
-                    <button
-                      className="btn btn-primary-outline"
-                      onClick={() => {
-                        setPlaylistModal((prev) => !prev);
-                      }}
-                    >
-                      Add to Playlist
-                    </button>
-                    <button
-                      className="btn btn-primary-outline"
-                      onClick={() => addWatchLater(video)}
-                    >
-                      Watch Later
-                    </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </main>
-      </section>
+          </main>
+        </section>
+        <DisplaySidebarVideo />
+      </main>
     </>
   );
 };

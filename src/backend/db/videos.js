@@ -36,7 +36,7 @@ export const videos = [
   {
     _id: "58753c90-b05d-48e9-973a-edc013863bf6",
     title: "Joe Rogan Experience #1309 - Naval Ravikant",
-    uploadedDate: "02072002",
+    uploadedDate: "23-11-2020",
     creator: "PowerfulJRE",
     description:
       "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.",
@@ -70,6 +70,7 @@ export const videos = [
       "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.",
     views: "485K views",
     uploaded: "8 months ago",
+    uploadedDate: "18-08-2018",
     avatar_url: "../assets/beerbiceps.jpg",
     video_url: "https://www.youtube.com/embed/xgY1AfUL55k",
     thumbnail: "../assets/kunal.jpg",
@@ -83,6 +84,7 @@ export const videos = [
       "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.",
     views: "7M views",
     uploaded: "2 Years ago",
+    uploadedDate: "27-12-2018",
     avatar_url: "../assets/tanmay.jpg",
     video_url: "https://www.youtube.com/embed/4H5dtevdkEY",
     thumbnail: "../assets/standup-tanmay.jpg",
@@ -97,6 +99,7 @@ export const videos = [
       "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.",
     views: "24M views",
     uploaded: "1 Years ago",
+    uploadedDate: "02-07-2020",
     avatar_url: "../assets/akash.jpg",
     video_url: "https://www.youtube.com/embed/KBZfnt80s54",
     thumbnail: "../assets/standup-akash.jpg",
