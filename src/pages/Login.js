@@ -6,13 +6,12 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import "../css/login.css";
 import NormalNavbar from "../components/NormalNavbar";
-import { VideoContext } from "../context/Data";
-
+import { useDispatch } from "react-redux";
+import { loginState } from "../features/login";
 const Login = () => {
   let location = useLocation();
-  const { setUserLoggedIn, dispatch } = useContext(VideoContext);
+  const dispatch1 = useDispatch();
   let navigate = useNavigate();
-  console.log(location);
   const [loginInput, setLoginInput] = useState({ email: "", password: "" });
   const loginFunc = async () => {
     try {
@@ -27,8 +26,8 @@ const Login = () => {
         const convertedJSON = await postData.json();
         sessionStorage.setItem("token", convertedJSON.encodedToken);
         setLoginInput({ email: "", password: "" });
-        dispatch({ type: "userLoggedIn", payload: { value: true } });
-        navigate(location.state === null ? "/" : location.state.from.pathname);
+        dispatch1(loginState({ value: true }));
+        navigate(location.state.from.pathname || "/");
       }
       if (postData.status === 404) {
         toast.error("Wrong Details", {
@@ -59,8 +58,8 @@ const Login = () => {
       if (postData.status === 200) {
         const convertedJSON = await postData.json();
         sessionStorage.setItem("token", convertedJSON.encodedToken);
+        dispatch1(loginState({ value: true }));
         setLoginInput({ email: "", password: "" });
-        dispatch({ type: "userLoggedIn", payload: { value: true } });
         navigate(location.state === null ? "/" : location.state.from.pathname);
       }
       if (postData.status === 404) {

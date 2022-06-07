@@ -1,14 +1,28 @@
-import React, { useContext } from "react";
+import React, { useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { VideoContext } from "../context/Data";
+import { useDispatch, useSelector } from "react-redux";
+import { loginState } from "../features/login";
 const NormalNavbar = () => {
   let location = useLocation();
-  const { videoState, userLoggedIn, dispatch } = useContext(VideoContext);
+  const { userLoggedIn } = useSelector((store) => store.login);
+  const dispatch1 = useDispatch();
+  useEffect(() => {
+    if (sessionStorage.getItem("token") === null) {
+      dispatch1(loginState({ value: false }));
+    } else if (sessionStorage.getItem("token") === undefined) {
+      dispatch1(loginState({ value: false }));
+    } else if (
+      sessionStorage.getItem("token") === sessionStorage.getItem("token")
+    ) {
+      dispatch1(loginState({ value: true }));
+    }
+  }, []);
   const logout = () => {
     sessionStorage.clear();
-    dispatch({ type: "userLoggedIn", payload: { value: false } });
+    dispatch1(loginState({ value: false }));
     toast.success("User Logged Out", {
       position: "top-right",
       autoClose: 1000,
@@ -41,7 +55,7 @@ const NormalNavbar = () => {
           </Link>
         </div>
         <div className="nav-btn-container">
-          {videoState.login ? (
+          {userLoggedIn ? (
             <button className="btn btn-primary" onClick={logout}>
               Logout
             </button>
