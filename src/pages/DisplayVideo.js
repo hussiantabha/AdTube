@@ -2,7 +2,12 @@ import React, { useState, useEffect, useContext } from "react";
 import { VideoContext } from "../context/Data";
 import NormalNavbar from "../components/NormalNavbar";
 import { BiLike } from "react-icons/bi";
-import { useLocation, useParams } from "react-router-dom";
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  Navigate,
+} from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector, useDispatch } from "react-redux";
@@ -11,6 +16,8 @@ import { updateLikeVideo } from "../features/like";
 import { addWatchLaterReducer } from "../features/watchLater";
 import { addHistoryData } from "../features/history";
 import { addPlaylistData } from "../features/playlist";
+import DisplaySidebarVideo from "../components/DisplaySidebarVideo";
+import Comment from "../components/Comment";
 const DisplayVideo = () => {
   const [playlist, setPlaylist] = useState("");
   const [allPlaylist, setAllPlayist] = useState([]);
@@ -23,8 +30,9 @@ const DisplayVideo = () => {
   const { videos } = useSelector((store) => store.video);
   const likedVideos = useSelector((store) => store.like);
   const playlistData = useSelector((store) => store.playlist);
-  // console.log(playlistData);
-  //console.log(likedVideos);
+  const { userLoggedIn } = useSelector((store) => store.login);
+  const location = useLocation();
+  const navigate = useNavigate();
   const getVideo = async () => {
     const getData = await fetch(`/api/video/${param.videoId}`);
     const convertedJSON = await getData.json();
@@ -145,29 +153,34 @@ const DisplayVideo = () => {
   }, [param.videoId]);
   const likeVideo = async (video) => {
     try {
-      const postData = await fetch(`/api/user/likes`, {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-          authorization: token,
-        },
-        body: JSON.stringify({
-          video,
-        }),
-      });
-      if (postData.status === 201) {
-        const convertedJSON = await postData.json();
-        // dispatch1(addLikeVideo({ value: convertedJSON.likes }));
-        dispatch1(updateLikeVideo({ value: convertedJSON.likes }));
-        toast.success("Added Successfully", {
-          position: "top-right",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
+      if (userLoggedIn) {
+        console.log("clic");
+        const postData = await fetch(`/api/user/likes`, {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+            authorization: token,
+          },
+          body: JSON.stringify({
+            video,
+          }),
         });
+        if (postData.status === 201) {
+          const convertedJSON = await postData.json();
+          // dispatch1(addLikeVideo({ value: convertedJSON.likes }));
+          dispatch1(updateLikeVideo({ value: convertedJSON.likes }));
+          toast.success("Added Successfully", {
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+          });
+        }
+      } else {
+        navigate("/login", { state: { from: location } });
       }
     } catch (error) {
       console.log(error);
@@ -190,28 +203,32 @@ const DisplayVideo = () => {
   };
   const addWatchLater = async (video) => {
     try {
-      const postData = await fetch("/api/user/watchlater", {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-          authorization: token,
-        },
-        body: JSON.stringify({
-          video,
-        }),
-      });
-      if (postData.status === 201) {
-        const convertedJSON = await postData.json();
-        dispatch1(addWatchLaterReducer({ value: convertedJSON.watchlater }));
-        toast.success("Added Successfully", {
-          position: "top-right",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
+      if (userLoggedIn) {
+        const postData = await fetch("/api/user/watchlater", {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+            authorization: token,
+          },
+          body: JSON.stringify({
+            video,
+          }),
         });
+        if (postData.status === 201) {
+          const convertedJSON = await postData.json();
+          dispatch1(addWatchLaterReducer({ value: convertedJSON.watchlater }));
+          toast.success("Added Successfully", {
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+          });
+        }
+      } else {
+        navigate("/login", { state: { from: location } });
       }
     } catch {}
   };
@@ -238,10 +255,8 @@ const DisplayVideo = () => {
     } catch (err) {}
   };
   useEffect(() => {
-    addHistory(video);
-  }, []);
-  useEffect(() => {
     dispatch1(getVideos());
+    addHistory(video);
   }, []);
 
   return (
@@ -258,104 +273,109 @@ const DisplayVideo = () => {
         pauseOnHover={false}
       />
       <NormalNavbar />
-      <div className={playlistModal ? "playlist-modal" : "playlist-modal-hide"}>
-        <h3>Create Playlist</h3>
-        <div className="playlist-modal-top-container">
-          <input
-            type="text"
-            onChange={(e) => setPlaylist(e.target.value)}
-            value={playlist}
-            className="playlist-input"
-          />
-          <button className="btn-modal" onClick={postPlaylist}>
-            Add
+      <main className="two-col">
+        <div
+          className={playlistModal ? "playlist-modal" : "playlist-modal-hide"}
+        >
+          <h3>Create Playlist</h3>
+          <div className="playlist-modal-top-container">
+            <input
+              type="text"
+              onChange={(e) => setPlaylist(e.target.value)}
+              value={playlist}
+              className="playlist-input"
+            />
+            <button className="btn-modal" onClick={postPlaylist}>
+              Add
+            </button>
+          </div>
+          {playlistData.playlist.map((element) => {
+            return (
+              <div className="individual-playlist" key={element.title}>
+                <input
+                  type="checkbox"
+                  value={element.title}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      setAllPlayist((prev) => [...prev, e.target.value]);
+                    } else {
+                      setAllPlayist(
+                        allPlaylist.filter((item) => item !== e.target.value)
+                      );
+                    }
+                  }}
+                  name={element.title}
+                />
+                <p>{element.title}</p>
+              </div>
+            );
+          })}
+          <button className="btn-modal-fullWidth" onClick={addVideoToPlaylist}>
+            Add To Playlist
           </button>
         </div>
-        {playlistData.playlist.map((element) => {
-          return (
-            <div className="individual-playlist" key={element.title}>
-              <input
-                type="checkbox"
-                value={element.title}
-                onChange={(e) => {
-                  if (e.target.checked) {
-                    setAllPlayist((prev) => [...prev, e.target.value]);
-                  } else {
-                    setAllPlayist(
-                      allPlaylist.filter((item) => item !== e.target.value)
-                    );
-                  }
-                }}
-                name={element.title}
-              />
-              <p>{element.title}</p>
-            </div>
-          );
-        })}
-        <button className="btn-modal-fullWidth" onClick={addVideoToPlaylist}>
-          Add To Playlist
-        </button>
-      </div>
-      <section>
-        <main>
-          <div className="video-container">
-            <iframe
-              width="100%"
-              height="100%"
-              src={video.video_url}
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen="1"
-              className="video-iframe"
-            ></iframe>
-
-            <div className="video-container-content">
-              <h2>{video.title}</h2>
-              <div className="video-container-icons">
-                <div>
-                  <h5>{`${video.views} . ${video.uploadedDate}`}</h5>
-                </div>
-                <div>
-                  <div className="video-icon">
-                    {likedVideos.likeVideos.filter(
-                      (item) => item.id === video.id
-                    ).length === 1 ? (
+        <section>
+          <main>
+            <div className="video-container">
+              <iframe
+                width="100%"
+                height="100%"
+                src={video.video_url}
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen="1"
+                className="video-iframe"
+              ></iframe>
+              <div className="video-container-content">
+                <h2 className="y-1">{video.title}</h2>
+                <div className="video-container-icons">
+                  <div>
+                    <h5>{`${video.views} . ${video.uploadedDate}`}</h5>
+                  </div>
+                  <div>
+                    <div className="video-icon">
+                      {likedVideos.likeVideos.filter(
+                        (item) => item.id === video.id
+                      ).length === 1 ? (
+                        <button
+                          onClick={() => removeLike(video)}
+                          className="btn btn-primary btn-like"
+                        >
+                          Liked
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => likeVideo(video)}
+                          className="btn btn-primary-outline btn-like"
+                        >
+                          <BiLike /> Like
+                        </button>
+                      )}
                       <button
-                        onClick={() => removeLike(video)}
-                        className="btn btn-primary btn-like"
-                      >
-                        Liked
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => likeVideo(video)}
                         className="btn btn-primary-outline btn-like"
+                        onClick={() => {
+                          setPlaylistModal((prev) => !prev);
+                        }}
                       >
-                        <BiLike /> Like
+                        Add to Playlist
                       </button>
-                    )}
-                    <button
-                      className="btn btn-primary-outline"
-                      onClick={() => {
-                        setPlaylistModal((prev) => !prev);
-                      }}
-                    >
-                      Add to Playlist
-                    </button>
-                    <button
-                      className="btn btn-primary-outline"
-                      onClick={() => addWatchLater(video)}
-                    >
-                      Watch Later
-                    </button>
+                      <button
+                        className="btn btn-primary-outline btn-like"
+                        onClick={() => addWatchLater(video)}
+                      >
+                        Watch Later
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </main>
-      </section>
+          </main>
+          <Comment />
+        </section>
+        <DisplaySidebarVideo />
+      </main>
     </>
   );
 };

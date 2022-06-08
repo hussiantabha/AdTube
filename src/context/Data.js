@@ -3,41 +3,6 @@ import React, { useState, createContext, useReducer, useEffect } from "react";
 const VideoContext = createContext({});
 
 const VideoContextProvider = ({ children }) => {
-  const reducerFunc = (state, action) => {
-    switch (action.type) {
-      case "videoData": {
-        return { ...state, data: action.payload.value };
-      }
-      case "userLoggedIn": {
-        return { ...state, login: action.payload.value };
-      }
-      case "playlistData": {
-        return { ...state, playlist: action.payload.value };
-      }
-      case "likedVideos": {
-        return { ...state, likedVideos: action.payload.value };
-      }
-      case "watchLaterVideos": {
-        return { ...state, watchLater: action.payload.value };
-      }
-      default: {
-        return { ...state };
-      }
-    }
-  };
-  const [videoState, dispatch] = useReducer(reducerFunc, {
-    data: [],
-    login: false,
-    playlist: [],
-    likedVideos: [],
-    watchLater: [],
-  });
-  useEffect(async () => {
-    const getData = await fetch("/api/videos");
-    const convertedJSON = await getData.json();
-    dispatch({ type: "videoData", payload: { value: convertedJSON.videos } });
-  }, []);
-
   const [userLoggedIn, setUserLoggedIn] = useState(false);
   // useEffect(() => {
   //   if (sessionStorage.getItem("token") === null) {
@@ -50,9 +15,7 @@ const VideoContextProvider = ({ children }) => {
   // }, [videoState]);
   return (
     <>
-      <VideoContext.Provider
-        value={{ videoState, dispatch, userLoggedIn, setUserLoggedIn }}
-      >
+      <VideoContext.Provider value={{ userLoggedIn, setUserLoggedIn }}>
         {children}
       </VideoContext.Provider>
     </>
