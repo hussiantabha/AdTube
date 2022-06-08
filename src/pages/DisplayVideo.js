@@ -2,7 +2,12 @@ import React, { useState, useEffect, useContext } from "react";
 import { VideoContext } from "../context/Data";
 import NormalNavbar from "../components/NormalNavbar";
 import { BiLike } from "react-icons/bi";
-import { useLocation, useParams } from "react-router-dom";
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+  Navigate,
+} from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector, useDispatch } from "react-redux";
@@ -12,6 +17,7 @@ import { addWatchLaterReducer } from "../features/watchLater";
 import { addHistoryData } from "../features/history";
 import { addPlaylistData } from "../features/playlist";
 import DisplaySidebarVideo from "../components/DisplaySidebarVideo";
+import Comment from "../components/Comment";
 const DisplayVideo = () => {
   const [playlist, setPlaylist] = useState("");
   const [allPlaylist, setAllPlayist] = useState([]);
@@ -24,8 +30,9 @@ const DisplayVideo = () => {
   const { videos } = useSelector((store) => store.video);
   const likedVideos = useSelector((store) => store.like);
   const playlistData = useSelector((store) => store.playlist);
-  // console.log(playlistData);
-  //console.log(likedVideos);
+  const { userLoggedIn } = useSelector((store) => store.login);
+  const location = useLocation();
+  const navigate = useNavigate();
   const getVideo = async () => {
     const getData = await fetch(`/api/video/${param.videoId}`);
     const convertedJSON = await getData.json();
@@ -146,29 +153,34 @@ const DisplayVideo = () => {
   }, [param.videoId]);
   const likeVideo = async (video) => {
     try {
-      const postData = await fetch(`/api/user/likes`, {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-          authorization: token,
-        },
-        body: JSON.stringify({
-          video,
-        }),
-      });
-      if (postData.status === 201) {
-        const convertedJSON = await postData.json();
-        // dispatch1(addLikeVideo({ value: convertedJSON.likes }));
-        dispatch1(updateLikeVideo({ value: convertedJSON.likes }));
-        toast.success("Added Successfully", {
-          position: "top-right",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
+      if (userLoggedIn) {
+        console.log("clic");
+        const postData = await fetch(`/api/user/likes`, {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+            authorization: token,
+          },
+          body: JSON.stringify({
+            video,
+          }),
         });
+        if (postData.status === 201) {
+          const convertedJSON = await postData.json();
+          // dispatch1(addLikeVideo({ value: convertedJSON.likes }));
+          dispatch1(updateLikeVideo({ value: convertedJSON.likes }));
+          toast.success("Added Successfully", {
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+          });
+        }
+      } else {
+        navigate("/login", { state: { from: location } });
       }
     } catch (error) {
       console.log(error);
@@ -191,28 +203,32 @@ const DisplayVideo = () => {
   };
   const addWatchLater = async (video) => {
     try {
-      const postData = await fetch("/api/user/watchlater", {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-          authorization: token,
-        },
-        body: JSON.stringify({
-          video,
-        }),
-      });
-      if (postData.status === 201) {
-        const convertedJSON = await postData.json();
-        dispatch1(addWatchLaterReducer({ value: convertedJSON.watchlater }));
-        toast.success("Added Successfully", {
-          position: "top-right",
-          autoClose: 1000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
+      if (userLoggedIn) {
+        const postData = await fetch("/api/user/watchlater", {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+            authorization: token,
+          },
+          body: JSON.stringify({
+            video,
+          }),
         });
+        if (postData.status === 201) {
+          const convertedJSON = await postData.json();
+          dispatch1(addWatchLaterReducer({ value: convertedJSON.watchlater }));
+          toast.success("Added Successfully", {
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+          });
+        }
+      } else {
+        navigate("/login", { state: { from: location } });
       }
     } catch {}
   };
@@ -311,7 +327,6 @@ const DisplayVideo = () => {
                 allowFullScreen="1"
                 className="video-iframe"
               ></iframe>
-
               <div className="video-container-content">
                 <h2 className="y-1">{video.title}</h2>
                 <div className="video-container-icons">
@@ -338,7 +353,7 @@ const DisplayVideo = () => {
                         </button>
                       )}
                       <button
-                        className="btn btn-primary-outline"
+                        className="btn btn-primary-outline btn-like"
                         onClick={() => {
                           setPlaylistModal((prev) => !prev);
                         }}
@@ -346,7 +361,7 @@ const DisplayVideo = () => {
                         Add to Playlist
                       </button>
                       <button
-                        className="btn btn-primary-outline"
+                        className="btn btn-primary-outline btn-like"
                         onClick={() => addWatchLater(video)}
                       >
                         Watch Later
@@ -357,6 +372,7 @@ const DisplayVideo = () => {
               </div>
             </div>
           </main>
+          <Comment />
         </section>
         <DisplaySidebarVideo />
       </main>
